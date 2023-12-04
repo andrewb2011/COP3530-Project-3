@@ -31,7 +31,7 @@ long long int MeasureUnorderedMapTime(uno_map& showMap, const std::string& showN
     return duration.count();
 }
 
-long long MeasureTrieTime( Trie& trie, const std::string& showName) {
+long long int MeasureTrieTime( Trie& trie, const std::string& showName) {
     auto start = std::chrono::high_resolution_clock::now();
 
     TVshow* foundShow = trie.find(showName);
@@ -66,13 +66,14 @@ void ShowData(TVshow& show, uno_map& showmap, TVshow* showPtr, Trie& trie, const
 
     double percentBetter;
     
-    if (unoMapTime > trieTime) {
+    if (unoMapTime > trieTime) {    // MABYE CHANGE THESE
         // find the percentage better unomaptime is 
         percentBetter = ((unoMapTime - trieTime) / static_cast<double>(unoMapTime)) * 100.0;
         cout << "Uno_map is " << percentBetter << " percent faster than the tree." << endl;
         cout << endl;
     }
-    else {
+    else {                          // MAYBE CHANGE THESE
+
         // find the percentage better trietime is
         percentBetter = ((trieTime - unoMapTime) / static_cast<double>(trieTime)) * 100.0;
         cout << "Trie is " << percentBetter << " percent faster than the unorganized map." << endl;

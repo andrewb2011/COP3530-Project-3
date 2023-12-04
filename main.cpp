@@ -258,13 +258,20 @@ int main() {
                         cin >> YesorNo;
 
                         if (YesorNo == "Yes" || YesorNo == "yes") {
-                            // get next 10 shows from sorted list
-                            startingPoint = endingPoint;
-                            endingPoint = min(endingPoint + 10, static_cast<int>(ShowsWithNumSeasons.size()));
 
-                            for (int i = startingPoint; i < endingPoint; i++) {
-                                cout << ShowsWithNumSeasons[i].getName() << " - Rating: " << ShowsWithNumSeasons[i].getVoteAverage() << endl; 
-                            } 
+                            if (endingPoint >= static_cast<int>(ShowsWithNumSeasons.size())) {
+                                cout << "There are no more shows to display with " << num << " seasons.";
+                                keepGoing = false;
+                            }
+                            else {
+                                // get next 10 shows from sorted list
+                                startingPoint = endingPoint;
+                                endingPoint = min(endingPoint + 10, static_cast<int>(ShowsWithNumSeasons.size()));
+
+                                for (int i = startingPoint; i < endingPoint; i++) {
+                                    cout << ShowsWithNumSeasons[i].getName() << " - Rating: " << ShowsWithNumSeasons[i].getVoteAverage() << endl; 
+                                } 
+                            }
 
                         }
                         else if (YesorNo == "No" || YesorNo == "no") {
@@ -292,10 +299,8 @@ int main() {
 
         }
         else if (input == 3) {
-            // This returns the user to the main menu
-            // maybe dont need this
+            // This finds a random show with atleast 100 votes.
 
-            // Maybe put a random show generator here.
             cout << endl;
             cout << "I see you want to find a random show." << endl;
             
@@ -304,7 +309,7 @@ int main() {
             while (loopThis) {
                 cout << "Enter 'Yes' to find a random show from our data." << endl;
                 cout << "Enter 'No' to return to Main Menu." << endl;
-                cout << endl;
+                
 
                 string response;
                 cin >> response;
