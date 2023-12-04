@@ -1,5 +1,5 @@
 #pragma once
-#include "./tvshow.h"
+#include "tvshow.h"
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -8,30 +8,30 @@ using std::string;
 
 class TVshow {
 
-    private:
-        // characteristics of the show.
-        string name;
-        int numSeasons;
-        int numEpisodes;
-        int voteCount;
-        float voteAverage;
-        string tagline;
-        string genres;
-        string languages;
-        string networks;
-        int epRuntime;
+private:
+    // characteristics of the show.
+    string name;
+    int numSeasons;
+    int numEpisodes;
+    int voteCount;
+    float voteAverage;
+    string tagline;
+    string genres;
+    string languages;
+    string networks;
+    int epRuntime;
 
-    public:
+public:
     /*============== CONSTRUCTOR =============== */
     // default constructor
     TVshow();
 
     TVshow(string name);
-    TVshow(string name, int seasons, int episodes, 
-           int vote, float average, string tag, 
-           string genre, string language, string network, 
+    TVshow(string name, int seasons, int episodes,
+           int vote, float average, string tag,
+           string genre, string language, string network,
            int runtime);
-    
+
     string getName();
     int getNumSeasons();
     int getNumEpisodes();
@@ -46,9 +46,9 @@ class TVshow {
 
 TVshow::TVshow() : numSeasons(0), numEpisodes(0), voteCount(0), voteAverage(0), epRuntime(0) {}
 
-TVshow::TVshow(string name, int seasons, int episodes, 
-               int vote, float average, string tag, 
-               string genre, string language, string network, 
+TVshow::TVshow(string name, int seasons, int episodes,
+               int vote, float average, string tag,
+               string genre, string language, string network,
                int runtime) {
     this->name = name;
     this->numSeasons = seasons;

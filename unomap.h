@@ -1,7 +1,6 @@
 #pragma once
-#include "./tvshow.h"
+#include "tvshow.h"
 #include <iostream>
-
 #define MAX_SIZE 150000
 
 class uno_map {
@@ -44,7 +43,7 @@ void uno_map::insert(TVshow show) {
         shows[index] = show;
         size++;
     }
-    // if there was a collision, use linear probing the go to the next free index. 
+        // if there was a collision, use linear probing the go to the next free index.
     else {
         while (arr[index]) {
             index = (index + 1) % MAX_SIZE;

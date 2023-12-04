@@ -1,5 +1,6 @@
 #include "unomap.h"
 #include "menu.h"
+#include "tvshow.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -10,9 +11,8 @@
 
 using namespace std;
 
-
 int main() {
-  
+
     string name;
     int numSeasons;
     int numEpisodes;
@@ -25,9 +25,9 @@ int main() {
     int epRuntime;
 
     uno_map showMap;
-
+    Trie trie;
     ifstream inFS("UpdatedDatawithoutDQ.csv");
-    
+
 
     if (!inFS.is_open()) {
         cout << "File could not be open" << endl;
@@ -74,29 +74,10 @@ int main() {
                 getline(inSS, tagline, ',');
 
                 getline(inSS, genres, ',');
-                    while (getline(inSS, token, ',')) {
-                        // Append each additional genre to the existing string
-                        genres += ", " + token;
-                }
-
-                /*if (inSS.peek() == '"') {
-                    //inSS.get();
-                    getline(inSS, genres, '\"');
-                }*/
-
-                /*getline(inSS, genres, '\"');
-                getline(inSS, genres, '\"');
-                genres = genres.substr(1);*/
-
-                /*getline(inSS, genres, ',');
                 while (getline(inSS, token, ',')) {
-
-                    if (token == "languages") 
-                        break;  
-                
                     // Append each additional genre to the existing string
                     genres += ", " + token;
-                }*/
+                }
 
                 getline(inSS, languages, ',');
 
@@ -105,16 +86,16 @@ int main() {
                 getline(inSS, token, ',');
                 epRuntime = stoi(token);
 
-                // make instance of each show to add to map and tree
+                // do something with this information
                 TVshow show(name, numSeasons, numEpisodes, voteCount, voteAverage, tagline, genres, languages, networks, epRuntime);
-
-                // add each TV show to map and tree.
+                TVshow* x = new TVshow(name, numSeasons, numEpisodes, voteCount, voteAverage, tagline, genres, languages, networks, epRuntime);
+                trie.insert(name, x);
                 showMap.insert(show);
 
             }
-            // This is used for debugging and tells my what line is affected
+                // This is used for debugging and tells my what line is affected
             catch (const std::exception& e) {
-                cerr << "Error processing line: " << line << "\n" << e.what() << endl;      
+                cerr << "Error processing line: " << line << "\n" << e.what() << endl;
             }
 
         }
@@ -122,11 +103,14 @@ int main() {
     }
     inFS.close();
 
-    
+
     cout << "Items in map: " << showMap.getSize() << endl;
     cout << "Collisions: " << showMap.collisions() << endl;
-    
+
     TVshow picked = showMap.find("Game of Thrones");
+    std::string showNameToFind = "Game of Thrones";
+    TVshow* foundShow = trie.find(showNameToFind);
+
     //ShowData(picked);
 
     /* ========== START OF PROGRAM ========== */
@@ -153,7 +137,18 @@ int main() {
             cout << "Excellent choice!" << endl;
 
             picked = showMap.find(showName);
-            ShowData(picked);
+            foundShow = trie.find(showName);
+            
+            if (picked.getName().empty() || foundShow == nullptr) {
+                cout << "Sorry. The show you're searching for is not in our records. Please try again." << endl;
+
+            }
+            else {
+                // Prints data of the tv show
+                ShowData(picked,showMap,showName);
+                ShowTree(foundShow,trie,showName);
+            }
+
 
 
         }
@@ -171,7 +166,7 @@ int main() {
 
             cin >> choice;
 
-             // maybe do a while loop just incase use inputs wrong number, it can go back to this point
+            // maybe do a while loop just incase use inputs wrong number, it can go back to this point
 
             if (choice == 1) {
                 // this searches shows by rating
@@ -181,23 +176,23 @@ int main() {
 
                 // This function get the Top 10 highest rated shows w/ atleast 100 ratings and put them into this vector
                 vector<TVshow> top10RatedShows = getTopRatedShows(showMap);
-                
+
                 int startingPoint = 0;
                 int endingPoint = min(10, static_cast<int>(top10RatedShows.size()));
 
                 for (int i = startingPoint; i < endingPoint; i++) {
                     cout << top10RatedShows[i].getName() << " - Rating: " << top10RatedShows[i].getVoteAverage() << endl;
                 }
-                
+
                 // this ask for the next 10 numbers
                 bool keepGoing = true;
                 string YesorNo;
 
-            
+
                 while (keepGoing) {
                     cout << endl;
                     cout << "Would you like to get the next 10 shows? Yes or No" << endl;
-                    
+
                     cin >> YesorNo;
 
                     if (YesorNo == "Yes" || YesorNo == "yes") {
@@ -206,8 +201,8 @@ int main() {
                         endingPoint = min(endingPoint + 10, static_cast<int>(top10RatedShows.size()));
 
                         for (int i = startingPoint; i < endingPoint; i++) {
-                            cout << top10RatedShows[i].getName() << " - Rating: " << top10RatedShows[i].getVoteAverage() << endl; 
-                        } 
+                            cout << top10RatedShows[i].getName() << " - Rating: " << top10RatedShows[i].getVoteAverage() << endl;
+                        }
 
                     }
                     else if (YesorNo == "No" || YesorNo == "no") {
@@ -217,24 +212,24 @@ int main() {
                         cout << "Please enter yes or no." << endl;
                     }
 
-                }
 
+                }
 
             }
             else if (choice == 2) {
 
-                cout << "Enter a number from 0 to 240 representing the number of seasons the show has." << endl;
+                cout << "Enter a number atleast 0 representing the number of seasons the show has." << endl;
                 cout << "Then the top rated shows with that many season will be displayed." << endl;
                 
                 int num;
 
                 cin >> num;
 
-                if (num < 0 || num > 240) {
-                    cout << "There are no shows with that number of seasons. Try again." << endl;
+                if (num < 0) {
+                    cout << "Please enter a valid number. Try again." << endl;
                     continue;
                 }
-                else if (num >= 0 && num <= 240) {
+                else if (num >= 0) {
                     // Here, make a vector will all shows with given number of season sorted by rating with atleast 100 ratings.
                     vector<TVshow> ShowsWithNumSeasons = getShowsNumSeasons(showMap, num);
 
@@ -254,7 +249,8 @@ int main() {
                     bool keepGoing = true;
                     string YesorNo;
 
-                
+                    // NEED TO ADD A STOPPER SO THAT IF THERE ARE NO MORE SHOWS TO VIEW, THEN IT BREAKS
+
                     while (keepGoing) {
                         cout << endl;
                         cout << "Would you like to get the next 10 shows? Yes or No" << endl;
@@ -308,6 +304,10 @@ int main() {
             cout << "Thank you for using our Show Picker. GoodBye!" << endl;
             RunProgram = false;
             break;
+        }
+        else {
+            cout << "Please enter a valid number." << endl;
+            continue;
         }
     }
     return 0;
