@@ -49,11 +49,15 @@ void ShowData(TVshow& show, uno_map& showmap, TVshow* showPtr, Trie& trie, const
     cout << "Number of Episodes : " << show.getNumEpisodes() << endl;
     cout << "Number of Votes : " << show.getVoteCount() << endl;
     cout << "Vote Average : " << show.getVoteAverage() << endl;
-    cout << '"' << show.getTagLine() << '"' << endl;
-    cout << "Genres : " << show.getGenres() << endl;
-    cout << "Languages : " << show.getLanguages() << endl;
-    cout << "Networks : " << show.getNetworks() << endl;
-    cout << "Episode Runtime : " << show.getEpRuntime() << endl;
+
+    if (show.getTagLine() != "null")
+        cout << '"' << show.getTagLine() << '"' << endl;
+    
+    cout << "Genres, Languages, Networks, Episode Runtime : " << show.getGenres() << endl;
+    
+    //cout << "Languages : " << show.getLanguages() << endl;
+    //cout << "Networks : " << show.getNetworks() << endl;
+    //cout << "Episode Runtime : " << show.getEpRuntime() << endl;
     cout << endl;
 
     // retreived the run time for each data strucure to find a show
@@ -69,14 +73,14 @@ void ShowData(TVshow& show, uno_map& showmap, TVshow* showPtr, Trie& trie, const
     if (unoMapTime > trieTime) {    // MABYE CHANGE THESE
         // find the percentage better unomaptime is 
         percentBetter = ((unoMapTime - trieTime) / static_cast<double>(unoMapTime)) * 100.0;
-        cout << "Uno_map is " << percentBetter << " percent faster than the tree." << endl;
+        cout << "Trie is " << percentBetter << " percent faster than the unorganized map." << endl;
         cout << endl;
     }
     else {                          // MAYBE CHANGE THESE
 
         // find the percentage better trietime is
         percentBetter = ((trieTime - unoMapTime) / static_cast<double>(trieTime)) * 100.0;
-        cout << "Trie is " << percentBetter << " percent faster than the unorganized map." << endl;
+        cout << "Unorganized Map is " << percentBetter << " percent faster than the trie tree." << endl;
         cout << endl;
     }
 }
@@ -106,7 +110,7 @@ vector<TVshow> getTopRatedShows(uno_map& showmap) {
 
 
     for (int i = 0; i < showmap.getSize(); i++) {
-        if (arr[i] && shows[i].getVoteCount() >= 100)
+        if (arr[i] && shows[i].getVoteCount() >= 65)
             allShows.push_back(shows[i]);
 
     }

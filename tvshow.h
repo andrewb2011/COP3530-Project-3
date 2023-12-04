@@ -44,7 +44,7 @@ public:
     int getEpRuntime();
 };
 
-TVshow::TVshow() : numSeasons(0), numEpisodes(0), voteCount(0), voteAverage(0), epRuntime(0) {}
+TVshow::TVshow() : name("Not Found"), numSeasons(0), numEpisodes(0), voteCount(0), voteAverage(0), epRuntime(0) {}
 
 TVshow::TVshow(string name, int seasons, int episodes,
                int vote, float average, string tag,

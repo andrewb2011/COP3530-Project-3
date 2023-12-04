@@ -56,8 +56,6 @@ int main() {
                     } while (!nextPart.empty() && nextPart.back() != '"');
                 }
 
-                // Remove double quotes from the beginning and end of the name
-                //name.erase(remove(name.begin(), name.end(), '"'), name.end());
 
                 getline(inSS, token, ',');
                 numSeasons = stoi(token);
@@ -103,9 +101,9 @@ int main() {
     }
     inFS.close();
 
-
-    cout << "Items in map: " << showMap.getSize() << endl;
-    cout << "Collisions: " << showMap.collisions() << endl;
+    // This was used for debugging
+    //cout << "Items in map: " << showMap.getSize() << endl;
+    //cout << "Collisions: " << showMap.collisions() << endl;
 
     TVshow picked = showMap.find("Game of Thrones");
     std::string showNameToFind = "Game of Thrones";
@@ -139,14 +137,13 @@ int main() {
             picked = showMap.find(showName);
             foundShow = trie.find(showName);
             
-            if (picked.getName().empty() || foundShow == nullptr) {
+            if (picked.getName() == "Not Found" || foundShow == nullptr) {
                 cout << "Sorry. The show you're searching for is not in our records. Please try again." << endl;
-
+                continue;
             }
             else {
                 // Prints data of the tv show
-                ShowData(picked,showMap,foundShow,trie,showName);
-                //ShowTree(foundShow,trie,showName);
+                ShowData(picked,showMap,foundShow,trie,showName);   
             }
 
 
@@ -166,13 +163,11 @@ int main() {
 
             cin >> choice;
 
-            // maybe do a while loop just incase use inputs wrong number, it can go back to this point
-
             if (choice == 1) {
                 // this searches shows by rating
 
                 cout << endl;
-                cout << "Here are the top 10 highest rated shows with atleast 100 ratings." << endl;
+                cout << "Here are the top 10 highest rated shows with atleast 65 ratings." << endl;
 
                 // This function get the Top 10 highest rated shows w/ atleast 100 ratings and put them into this vector
                 vector<TVshow> top10RatedShows = getTopRatedShows(showMap);
@@ -237,7 +232,7 @@ int main() {
                         cout << "There are no shows that have to number of seasons you requested." << endl;
                         continue;
                     }
-
+                    
                     int startingPoint = 0;
                     int endingPoint = min(10, static_cast<int>(ShowsWithNumSeasons.size()));
 
@@ -249,7 +244,7 @@ int main() {
                     bool keepGoing = true;
                     string YesorNo;
 
-                    // NEED TO ADD A STOPPER SO THAT IF THERE ARE NO MORE SHOWS TO VIEW, THEN IT BREAKS
+                    // IF THERE ARE NO MORE SHOWS TO VIEW, THEN IT BREAKS
 
                     while (keepGoing) {
                         cout << endl;
@@ -261,6 +256,7 @@ int main() {
 
                             if (endingPoint >= static_cast<int>(ShowsWithNumSeasons.size())) {
                                 cout << "There are no more shows to display with " << num << " seasons.";
+                                cout << endl;
                                 keepGoing = false;
                             }
                             else {
@@ -283,7 +279,6 @@ int main() {
 
                     }
 
-
                 }
                 else {
                     cout << "Please a correct number." << endl;
@@ -295,7 +290,6 @@ int main() {
                 cout << "Incorrect input. Please choose correct input" << endl;
                 continue;
             }
-
 
         }
         else if (input == 3) {
