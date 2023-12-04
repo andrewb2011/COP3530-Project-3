@@ -145,8 +145,8 @@ int main() {
             }
             else {
                 // Prints data of the tv show
-                ShowData(picked,showMap,showName);
-                ShowTree(foundShow,trie,showName);
+                ShowData(picked,showMap,foundShow,trie,showName);
+                //ShowTree(foundShow,trie,showName);
             }
 
 
@@ -296,6 +296,41 @@ int main() {
             // maybe dont need this
 
             // Maybe put a random show generator here.
+            cout << endl;
+            cout << "I see you want to find a random show." << endl;
+            
+            bool loopThis = true;
+
+            while (loopThis) {
+                cout << "Enter 'Yes' to find a random show from our data." << endl;
+                cout << "Enter 'No' to return to Main Menu." << endl;
+                cout << endl;
+
+                string response;
+                cin >> response;
+                cout << endl;
+
+                if (response == "yes" || response == "Yes") {
+
+                    // add code here
+                    TVshow randomShow = getRandomShow(showMap);
+
+                    ShowData(randomShow, showMap, nullptr, trie, randomShow.getName());
+
+                    cout << "Do you want to request another random show? Yes or No" << endl;
+                    cin >> response;
+                    
+                    if (response == "No" || response == "no") 
+                        loopThis = false;
+                }
+                else if (response == "No" || response == "no") {
+                    loopThis = false;
+
+                }
+                else 
+                    cout << "Invalid input. Please enter 'Yes' or 'No'." << endl;
+                
+            }
 
             continue;
         }
