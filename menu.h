@@ -8,6 +8,7 @@
 #include <chrono>
 
 using namespace std;
+using high_resolution_clock=std::chrono::system_clock;
 void MainMenu() {
 
     cout << "\n1. Search by TV show name." << endl;
@@ -20,18 +21,19 @@ void RetrievingData() {
 
     cout << "Retrieving Data" << endl;
 }
-long long int MeasureUnorderedMapTime(uno_map& showMap, const std::string& showName) {
+long long int MeasureUnorderedMapTime(uno_map& showMap, const string& showName) {
     auto start = std::chrono::high_resolution_clock::now();
 
+    
     TVshow picked = showMap.find(showName);
 
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-
+    
     return duration.count();
 }
 
-long long int MeasureTrieTime( Trie& trie, const std::string& showName) {
+long long int MeasureTrieTime( Trie& trie, const string& showName) {
     auto start = std::chrono::high_resolution_clock::now();
 
     TVshow* foundShow = trie.find(showName);
@@ -53,16 +55,15 @@ void ShowData(TVshow& show, uno_map& showmap, TVshow* showPtr, Trie& trie, const
     if (show.getTagLine() != "null")
         cout << '"' << show.getTagLine() << '"' << endl;
     
-    cout << "Genres, Languages, Networks, Episode Runtime : " << show.getGenres() << endl;
-    
+    //cout << "Genres, Languages, Networks, Episode Runtime : " << show.getGenres() << endl;
     //cout << "Languages : " << show.getLanguages() << endl;
     //cout << "Networks : " << show.getNetworks() << endl;
     //cout << "Episode Runtime : " << show.getEpRuntime() << endl;
     cout << endl;
 
     // retreived the run time for each data strucure to find a show
-    long long unoMapTime = MeasureUnorderedMapTime(showmap, showName);
-    long long trieTime = MeasureTrieTime(trie, showName);
+    long long int unoMapTime = MeasureUnorderedMapTime(showmap, showName);
+    long long int trieTime = MeasureTrieTime(trie, showName);
 
     cout << "Time taken by uno_map to find a show: " << unoMapTime << " nanoseconds" << std::endl;
     cout << "Time taken by trie to find a show: " << trieTime << " nanoseconds" << endl;
